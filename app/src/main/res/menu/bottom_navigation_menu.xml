@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/ic_house"
+        android:icon="@drawable/bookicon"
+        android:title="@string/title_books"
+        ></item>
+    <item
+        android:id="@+id/ic_stand"
+        android:icon="@drawable/bookstand"
+        android:title="@string/title_myBooks"
+        ></item>
+    <item
+        android:id="@+id/ic_like"
+        android:icon="@drawable/like"
+        android:title="@string/title_interestedBooks"
+        ></item>
+    <item
+        android:id="@+id/ic_person"
+        android:icon="@drawable/person"
+        android:title="@string/title_interestedPeople"
+        ></item>
+
+
+
+</menu>

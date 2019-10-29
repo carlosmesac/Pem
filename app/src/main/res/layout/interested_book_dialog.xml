@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="350dp"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#232323"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/dialogInterestedImage"
+            android:layout_width="300dp"
+            android:layout_height="200dp"
+            tools:srcCompat="@tools:sample/avatars[0]"
+            android:layout_gravity="center"
+            />
+        <TextView
+            android:id="@+id/dialogInterestedTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/bookTitle"
+            android:textColor="@android:color/white"
+            android:textSize="24sp"
+            android:layout_gravity="center"
+            android:textStyle="bold"
+
+            />
+        <TextView
+            android:id="@+id/dialogInterestedAuthor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/bookAuthor"
+            android:layout_gravity="center"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"></LinearLayout>
+
+        <Button
+            android:id="@+id/dialogInterestedDelete"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#F13E3E"
+            android:drawableLeft="@drawable/broken_heart"
+            android:drawablePadding="20dp"
+            android:paddingLeft="20dp"
+            android:text="Not Interested Anymore"
+            android:textAlignment="textStart"
+
+            />
+
+        <Button
+            android:id="@+id/dialogInterestedUser"
+            android:textAlignment="textStart"
+            android:drawablePadding="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/white"
+            android:drawableLeft="@drawable/ic_person_black_24dp"
+            android:paddingLeft="20dp"
+            android:text="Go to user profile"
+
+            />
+
+        <Button
+            android:id="@+id/dialogInterestedContact"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/white"
+            android:drawableLeft="@drawable/ic_email_black_24dp"
+            android:drawablePadding="20dp"
+            android:paddingLeft="20dp"
+            android:text="Conctact with the user"
+            android:textAlignment="textStart"
+
+            />
+
+    </LinearLayout>
+
+</RelativeLayout>

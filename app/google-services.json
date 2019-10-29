@@ -1,0 +1,122 @@
+{
+  "project_info": {
+    "project_number": "543746704458",
+    "firebase_url": "https://proyectopem-54056.firebaseio.com",
+    "project_id": "proyectopem-54056",
+    "storage_bucket": "proyectopem-54056.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:543746704458:android:f5111458aa4833dbaad2b3",
+        "android_client_info": {
+          "package_name": "es.ulpgc.alu.mesa104.carlos.libros"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "543746704458-4fc6u2hkajlhjn8nlnnn9dn9p94e0963.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "es.ulpgc.alu.mesa104.carlos.libros",
+            "certificate_hash": "8b07909017ab8ffa032012051aec3091a79558d8"
+          }
+        },
+        {
+          "client_id": "543746704458-3tld96r122vq7sf8fnaess1qjtbc956i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "es.ulpgc.alu.mesa104.carlos.libros",
+            "certificate_hash": "0a1fb68bdb19a97dc8d4f3d20a11f42ebbc2003c"
+          }
+        },
+        {
+          "client_id": "543746704458-tfvb79cgeu6dpoap6vtkae5c6qspm721.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB1uWBTtn5lufmDE7lxXoq7nY8R7C-AISQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "543746704458-tfvb79cgeu6dpoap6vtkae5c6qspm721.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:543746704458:android:b1ff1988b95f348daad2b3",
+        "android_client_info": {
+          "package_name": "es.ulpgc.alu.mesa104.carlos.pem"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "543746704458-vo1rn2srcirlj0i70l1p090jospmilf4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "es.ulpgc.alu.mesa104.carlos.pem",
+            "certificate_hash": "8b07909017ab8ffa032012051aec3091a79558d8"
+          }
+        },
+        {
+          "client_id": "543746704458-tfvb79cgeu6dpoap6vtkae5c6qspm721.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB1uWBTtn5lufmDE7lxXoq7nY8R7C-AISQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "543746704458-tfvb79cgeu6dpoap6vtkae5c6qspm721.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:543746704458:android:82e26f3e76347a0daad2b3",
+        "android_client_info": {
+          "package_name": "es.ulpgc.mesa.carlos.pem"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "543746704458-tfvb79cgeu6dpoap6vtkae5c6qspm721.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB1uWBTtn5lufmDE7lxXoq7nY8R7C-AISQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "543746704458-tfvb79cgeu6dpoap6vtkae5c6qspm721.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

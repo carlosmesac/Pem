@@ -1,0 +1,34 @@
+<resources>
+    <string name="app_name">libros</string>
+    <string name="signin">Registrate</string>
+    <string name="login">login</string>
+    <string name="username">Username</string>
+    <string name="name">Name</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="address">Address</string>
+    <string name="continuar">Continue</string>
+    <string name="or">Or</string>
+    <string name="NewAccount">New Account</string>
+    <string name="bookName">bookName</string>
+    <string name="logout">Log out</string>
+    <string name="title_activity_home">home</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_interestedPeople">Personas interesadas</string>
+    <string name="title_activity_home2">home2</string>
+    <string name="title_books">Libros</string>
+    <string name="title_myBooks">Mis Libros</string>
+    <string name="title_interestedBooks">Libros Interes</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="bookTitle">Title</string>
+    <string name="bookAuthor">Author</string>
+    <string name="bookISBN">ISBN</string>
+    <string name="addImage">Add Image</string>
+    <string name="cancel">Cancel</string>
+    <string name="newBook">Add</string>
+    <string name="search">search</string>
+    <string name="pick_image_intent_text">pickImage</string>
+    <string name="usernameUserBooks">Username</string>
+    <string name="interested_on">está interesado en:</string>
+</resources>
