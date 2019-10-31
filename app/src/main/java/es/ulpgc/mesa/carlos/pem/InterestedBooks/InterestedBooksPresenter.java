@@ -3,6 +3,10 @@ package es.ulpgc.mesa.carlos.pem.InterestedBooks;
 import android.util.Log;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+
+import es.ulpgc.mesa.carlos.pem.App.BookItem;
+import es.ulpgc.mesa.carlos.pem.App.Contract;
 
 public class InterestedBooksPresenter implements InterestedBooksContract.Presenter {
 
@@ -41,8 +45,20 @@ public class InterestedBooksPresenter implements InterestedBooksContract.Present
         viewModel.data = data;
 
         // update the view
-        view.get().displayData(viewModel);
+        view.get().displayInterestedBooks(viewModel);
 
+    }
+
+    @Override
+    public void fillInterestedBooksArray() {
+        model.fillInterestedBooksArray(new Contract.FillInterestedBooksArray() {
+            @Override
+            public void onFillInterestedBooksArray(boolean error, ArrayList<BookItem> bookItemArrayList) {
+                viewModel.bookItemArrayList=bookItemArrayList;
+                view.get().displayInterestedBooks(viewModel);
+            }
+
+        });
     }
 
     @Override

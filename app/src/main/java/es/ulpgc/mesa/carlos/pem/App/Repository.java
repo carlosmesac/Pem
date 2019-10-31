@@ -6,6 +6,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.util.Log;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -25,6 +26,8 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+
+import static java.security.AccessController.getContext;
 
 public class Repository implements Contract {
     private static Repository INSTANCE;
@@ -260,6 +263,40 @@ public class Repository implements Contract {
 
     return bookItemArrayList;
     }
+
+    @Override
+    public ArrayList<BookItem> fillInterestedBooksArray(final FillInterestedBooksArray callback) {
+        databaseReference= FirebaseDatabase.getInstance().getReference().child("BooksILike").child(mAuth.getCurrentUser().getUid());
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                bookItemArrayList.clear();
+                for(DataSnapshot dataSnapshot1: dataSnapshot.getChildren()){
+                    String autor= dataSnapshot1.child("autor").getValue(String.class);
+                    String image= dataSnapshot1.child("image").getValue(String.class);
+                    String isbn= dataSnapshot1.child("isbn").getValue(String.class);
+                    String title= dataSnapshot1.child("title").getValue(String.class);
+                    String user= dataSnapshot1.child("user").getValue(String.class);
+                    String email= dataSnapshot1.child("correo").getValue(String.class);
+
+                    BookItem bookItem= new BookItem(autor,image,isbn,title,user,email);
+                    bookItemArrayList.add(bookItem);
+
+                }
+                callback.onFillInterestedBooksArray(false,bookItemArrayList);
+                //interestedBooksAdapter= new InterestedBooksAdapter(getContext(),bookItemArrayList);
+                //recyclerView.setAdapter(interestedBooksAdapter);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+        return bookItemArrayList;
+
+    }
+
 
 
     /**

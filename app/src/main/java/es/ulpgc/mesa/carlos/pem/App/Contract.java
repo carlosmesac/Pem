@@ -69,9 +69,20 @@ public interface Contract {
         void onAddNewBook(boolean error);
     }
 
+    /**
+     * MEthod that fills an array with all the books in the firebase database
+     * @param callback
+     * @return array filled with all the books
+     */
     ArrayList<BookItem> fillBooksArray(Contract.FillBooksArray callback);
 
     interface FillBooksArray{
         void onFillBooksArray(boolean error, ArrayList<BookItem> bookItemArrayList);
+    }
+
+    ArrayList<BookItem> fillInterestedBooksArray(Contract.FillInterestedBooksArray callback);
+
+    interface FillInterestedBooksArray{
+        void onFillInterestedBooksArray(boolean error, ArrayList<BookItem> bookItemArrayList);
     }
 }
