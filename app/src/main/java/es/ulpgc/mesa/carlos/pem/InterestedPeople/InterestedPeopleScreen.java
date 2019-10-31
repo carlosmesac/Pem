@@ -5,6 +5,8 @@ import androidx.fragment.app.FragmentActivity;
 import java.lang.ref.WeakReference;
 
 import es.ulpgc.mesa.carlos.pem.App.AppMediator;
+import es.ulpgc.mesa.carlos.pem.App.Contract;
+import es.ulpgc.mesa.carlos.pem.App.Repository;
 
 public class InterestedPeopleScreen {
 
@@ -17,8 +19,10 @@ public class InterestedPeopleScreen {
         InterestedPeopleState state = mediator.getInterestedPeopleState();
 
         InterestedPeopleContract.Router router = new InterestedPeopleRouter(mediator);
+
+        Contract contract= Repository.getInstance(context.get());
         InterestedPeopleContract.Presenter presenter = new InterestedPeoplePresenter(state);
-        InterestedPeopleContract.Model model = new InterestedPeopleModel();
+        InterestedPeopleContract.Model model = new InterestedPeopleModel(contract);
         presenter.injectModel(model);
         presenter.injectRouter(router);
         presenter.injectView(new WeakReference<>(view));

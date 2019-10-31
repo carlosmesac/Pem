@@ -79,10 +79,21 @@ public interface Contract {
     interface FillBooksArray{
         void onFillBooksArray(boolean error, ArrayList<BookItem> bookItemArrayList);
     }
-
+    /**
+     * MEthod that fills an array with all the books that the user liked in the firebase database
+     * @param callback
+     * @return array filled with all the books
+     */
     ArrayList<BookItem> fillInterestedBooksArray(Contract.FillInterestedBooksArray callback);
 
     interface FillInterestedBooksArray{
         void onFillInterestedBooksArray(boolean error, ArrayList<BookItem> bookItemArrayList);
     }
+
+    ArrayList<Like> fillInterestedPeopleArray(Contract.FillInterestedPeopleArray callback);
+
+    interface FillInterestedPeopleArray{
+        void onFillInterestedPeopleArray(boolean error, ArrayList<Like> likeArrayList);
+    }
+
 }

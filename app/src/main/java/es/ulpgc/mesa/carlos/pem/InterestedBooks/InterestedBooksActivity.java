@@ -40,7 +40,7 @@ public class InterestedBooksActivity
 
 
         TextView textView= findViewById(R.id.title_cabecera);
-        textView.setText(R.string.title_myBooks);
+        textView.setText(R.string.title_interestedBooks);
 
         setupBottomNavigationView();
         //Iniciacion del recyclerView
@@ -66,7 +66,6 @@ public class InterestedBooksActivity
         //Log.e(TAG, "displayData()");
 
         // deal with the data
-        ((TextView) findViewById(R.id.data)).setText(viewModel.data);
     }
 
     @Override

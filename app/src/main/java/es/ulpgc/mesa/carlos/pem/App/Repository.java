@@ -27,34 +27,36 @@ import com.google.firebase.storage.UploadTask;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
-import static java.security.AccessController.getContext;
-
 public class Repository implements Contract {
     private static Repository INSTANCE;
     private FirebaseAuth mAuth;
     private Context context;
     private DatabaseReference mDataBase;
     private StorageReference storageRef;
-    private  DatabaseReference booksRef;
+    private DatabaseReference booksRef;
     private DatabaseReference allBooksRef;
     String url;
-    int i=0;
+    int i = 0;
     private DatabaseReference databaseReference;
     private ArrayList<BookItem> bookItemArrayList;
+    private ArrayList<Like> likeArrayList;
 
     public static String TAG = Repository.class.getSimpleName();
 
 
     public static Contract getInstance(Context context) {
-        if(INSTANCE == null){
+        if (INSTANCE == null) {
             INSTANCE = new Repository(context);
         }
         return INSTANCE;
     }
-    private Repository(Context context) {
-        databaseReference= FirebaseDatabase.getInstance().getReference();
 
-        bookItemArrayList= new ArrayList<>();
+    private Repository(Context context) {
+        databaseReference = FirebaseDatabase.getInstance().getReference();
+
+        bookItemArrayList = new ArrayList<>();
+
+        likeArrayList = new ArrayList<>();
 
         mDataBase = FirebaseDatabase.getInstance().getReferenceFromUrl("https://proyectopem-54056.firebaseio.com/"); // DB reference
 
@@ -64,7 +66,7 @@ public class Repository implements Contract {
 
         booksRef = FirebaseDatabase.getInstance().getReference().child("booksUser");
 
-        allBooksRef= FirebaseDatabase.getInstance().getReference().child("allBooks");
+        allBooksRef = FirebaseDatabase.getInstance().getReference().child("allBooks");
 
         this.context = context;
 
@@ -73,6 +75,7 @@ public class Repository implements Contract {
 
     /**
      * Method that creates a new account with the values passed in the parameters
+     *
      * @param nombre
      * @param nombreUsuario
      * @param correo
@@ -92,7 +95,7 @@ public class Repository implements Contract {
                     callback.onAccountCreated(true);
                 } else {
                     final Users user = new Users(nombre, nombreUsuario, correo, direccion, contra);
-                    createUser(user,callback);
+                    createUser(user, callback);
                 }
 
             }
@@ -105,12 +108,14 @@ public class Repository implements Contract {
         });
 
     }
-     /**Method that logs in if the user is on the Firebase Authentication dB
+
+    /**
+     * Method that logs in if the user is on the Firebase Authentication dB
+     *
      * @param email
      * @param password
      * @param callback
-
-      */
+     */
     @Override
     public void signIn(String email, String password, final OnSignInCallback callback) {
         mAuth.signInWithEmailAndPassword(email, password).
@@ -130,6 +135,7 @@ public class Repository implements Contract {
 
     /**
      * Method that disconnects the current user
+     *
      * @param callback
      */
     @Override
@@ -141,19 +147,21 @@ public class Repository implements Contract {
 
     /**
      * Method that checks if is there is an user logged
+     *
      * @param isLoginCallBack
      */
     @Override
     public void isLogin(IsLoginCallBack isLoginCallBack) {
-        if(mAuth.getCurrentUser()!=null){
+        if (mAuth.getCurrentUser() != null) {
             isLoginCallBack.isLogin(true);
-        }else {
+        } else {
             isLoginCallBack.isLogin(false);
         }
     }
 
     /**
-     *Method that add the data values to the database and storage the image into firebase Storage
+     * Method that add the data values to the database and storage the image into firebase Storage
+     *
      * @param isbn
      * @param author
      * @param title
@@ -170,7 +178,7 @@ public class Repository implements Contract {
                 if (dataSnapshot.child("booksUser").child(mAuth.getCurrentUser().getUid()).hasChild(isbn)) {
                     callback.onAddNewBook(true);
                 } else {
-                    final StorageReference ref = storageRef.child("images/" +mAuth.getCurrentUser().getUid()+"/"+ title + ".jpg");
+                    final StorageReference ref = storageRef.child("images/" + mAuth.getCurrentUser().getUid() + "/" + title + ".jpg");
                     imageView.setDrawingCacheEnabled(true);
                     imageView.buildDrawingCache();
                     Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
@@ -194,11 +202,11 @@ public class Repository implements Contract {
                         public void onComplete(@NonNull Task<Uri> task) {
                             if (task.isSuccessful()) {
                                 Uri downloadUri = task.getResult();
-                                url= downloadUri.toString();//Se obtiene la direccion de la imagen que se acaba de subir
-                                BookItem bookItem= new BookItem(author,url,isbn,title,mAuth.getCurrentUser().getUid(),
+                                url = downloadUri.toString();//Se obtiene la direccion de la imagen que se acaba de subir
+                                BookItem bookItem = new BookItem(author, url, isbn, title, mAuth.getCurrentUser().getUid(),
                                         dataSnapshot.child("users").child(mAuth.getCurrentUser().getUid()).child("email").getValue().toString());
-                                booksRef.child(mAuth.getCurrentUser().getUid()).child(bookItem.getTitle()+"_"+bookItem.getIsbn()).setValue(bookItem);
-                                allBooksRef.child(mAuth.getCurrentUser().getUid()+"_"+bookItem.getTitle()+"_"+bookItem.getIsbn()).setValue(bookItem);
+                                booksRef.child(mAuth.getCurrentUser().getUid()).child(bookItem.getTitle() + "_" + bookItem.getIsbn()).setValue(bookItem);
+                                allBooksRef.child(mAuth.getCurrentUser().getUid() + "_" + bookItem.getTitle() + "_" + bookItem.getIsbn()).setValue(bookItem);
                                 callback.onAddNewBook(false);
                                 i++;
                             } else {
@@ -207,7 +215,6 @@ public class Repository implements Contract {
                             }
                         }
                     });
-
 
 
                 }
@@ -225,6 +232,12 @@ public class Repository implements Contract {
 
     }
 
+    /**
+     * Method that fill an arrayList with all the books in the database
+     *
+     * @param callback
+     * @return ArrayList filled with all the books
+     */
     @Override
     public ArrayList<BookItem> fillBooksArray(final Contract.FillBooksArray callback) {
         databaseReference = FirebaseDatabase.getInstance().getReference().child("booksUser").child(mAuth.getCurrentUser().getUid());
@@ -244,11 +257,8 @@ public class Repository implements Contract {
                     bookItemArrayList.add(bookItem);
 
 
-
-
-
                 }
-                callback.onFillBooksArray(false,bookItemArrayList);
+                callback.onFillBooksArray(false, bookItemArrayList);
 
 
                 //homeAdapter = new HomeAdapter(getContext(), bookItemArrayList);
@@ -261,29 +271,35 @@ public class Repository implements Contract {
             }
         });
 
-    return bookItemArrayList;
+        return bookItemArrayList;
     }
 
+    /**
+     * Method that fill an arrayList with all the books that the current user liked
+     *
+     * @param callback
+     * @return an arrayList with all the books that the current user liked
+     */
     @Override
     public ArrayList<BookItem> fillInterestedBooksArray(final FillInterestedBooksArray callback) {
-        databaseReference= FirebaseDatabase.getInstance().getReference().child("BooksILike").child(mAuth.getCurrentUser().getUid());
+        databaseReference = FirebaseDatabase.getInstance().getReference().child("BooksILike").child(mAuth.getCurrentUser().getUid());
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 bookItemArrayList.clear();
-                for(DataSnapshot dataSnapshot1: dataSnapshot.getChildren()){
-                    String autor= dataSnapshot1.child("autor").getValue(String.class);
-                    String image= dataSnapshot1.child("image").getValue(String.class);
-                    String isbn= dataSnapshot1.child("isbn").getValue(String.class);
-                    String title= dataSnapshot1.child("title").getValue(String.class);
-                    String user= dataSnapshot1.child("user").getValue(String.class);
-                    String email= dataSnapshot1.child("correo").getValue(String.class);
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                    String autor = dataSnapshot1.child("autor").getValue(String.class);
+                    String image = dataSnapshot1.child("image").getValue(String.class);
+                    String isbn = dataSnapshot1.child("isbn").getValue(String.class);
+                    String title = dataSnapshot1.child("title").getValue(String.class);
+                    String user = dataSnapshot1.child("user").getValue(String.class);
+                    String email = dataSnapshot1.child("correo").getValue(String.class);
 
-                    BookItem bookItem= new BookItem(autor,image,isbn,title,user,email);
+                    BookItem bookItem = new BookItem(autor, image, isbn, title, user, email);
                     bookItemArrayList.add(bookItem);
 
                 }
-                callback.onFillInterestedBooksArray(false,bookItemArrayList);
+                callback.onFillInterestedBooksArray(false, bookItemArrayList);
                 //interestedBooksAdapter= new InterestedBooksAdapter(getContext(),bookItemArrayList);
                 //recyclerView.setAdapter(interestedBooksAdapter);
 
@@ -297,10 +313,44 @@ public class Repository implements Contract {
 
     }
 
+    /**
+     * Method that fills a list with all the user that liked a book that the current user uploaded
+     *
+     * @param callback
+     * @return And arrayList with all the users
+     */
+    @Override
+    public ArrayList<Like> fillInterestedPeopleArray(final FillInterestedPeopleArray callback) {
+        databaseReference = FirebaseDatabase.getInstance().getReference();
+        databaseReference.child("Likes").child(mAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                likeArrayList.clear();
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                    String title = dataSnapshot1.child("title").getValue(String.class);
+                    String publisher = dataSnapshot1.child("publisher").getValue(String.class);
+                    String currentUser = dataSnapshot1.child("user").getValue(String.class);
+                    Like like = new Like(publisher, title, currentUser);
+                    likeArrayList.add(like);
+                }
+                callback.onFillInterestedPeopleArray(false, likeArrayList);
+
+                //interestedPeopleAdapter = new InterestedPeopleAdapter(getContext(), likeArrayList);
+//                recyclerView.setAdapter(interestedPeopleAdapter);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+        return likeArrayList;
+    }
 
 
     /**
      * Method that add the user to the firebase database and creates another child to add only the username
+     *
      * @param user
      * @param callback
      */

@@ -3,6 +3,10 @@ package es.ulpgc.mesa.carlos.pem.InterestedPeople;
 import android.util.Log;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+
+import es.ulpgc.mesa.carlos.pem.App.Contract;
+import es.ulpgc.mesa.carlos.pem.App.Like;
 
 public class InterestedPeoplePresenter implements InterestedPeopleContract.Presenter {
 
@@ -43,6 +47,17 @@ public class InterestedPeoplePresenter implements InterestedPeopleContract.Prese
         // update the view
         view.get().displayData(viewModel);
 
+    }
+
+    @Override
+    public void fillLikesArray() {
+        model.fillInterestedPeopleArray(new Contract.FillInterestedPeopleArray() {
+            @Override
+            public void onFillInterestedPeopleArray(boolean error, ArrayList<Like> likeArrayList) {
+                viewModel.likeArrayList=likeArrayList;
+                view.get().displayInterestedPeople(viewModel);
+            }
+        });
     }
 
     @Override
