@@ -26,6 +26,8 @@ public interface MyBooksContract {
         void fetchData();
 
         void fillBooksArray();
+
+        void addBook();
     }
 
     interface Model {
@@ -40,5 +42,7 @@ public interface MyBooksContract {
         void passDataToNextScreen(MyBooksState state);
 
         MyBooksState getDataFromPreviousScreen();
+
+        void addBook();
     }
 }

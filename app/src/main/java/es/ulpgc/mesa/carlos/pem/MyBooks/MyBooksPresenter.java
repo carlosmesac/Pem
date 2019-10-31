@@ -64,6 +64,11 @@ public class MyBooksPresenter implements MyBooksContract.Presenter {
     }
 
     @Override
+    public void addBook() {
+        router.addBook();
+    }
+
+    @Override
     public void injectView(WeakReference<MyBooksContract.View> view) {
         this.view = view;
     }

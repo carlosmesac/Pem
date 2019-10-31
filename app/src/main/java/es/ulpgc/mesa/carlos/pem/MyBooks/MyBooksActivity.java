@@ -3,12 +3,14 @@ package es.ulpgc.mesa.carlos.pem.MyBooks;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DatabaseReference;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
@@ -44,6 +46,14 @@ public class MyBooksActivity
         bookItemArrayList = new ArrayList<>();
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         // do the setup
+
+        FloatingActionButton addButton= findViewById(R.id.addBook);
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                presenter.addBook();
+            }
+        });
         MyBooksScreen.configure(this);
 
     }
