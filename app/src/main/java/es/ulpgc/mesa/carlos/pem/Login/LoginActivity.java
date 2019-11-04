@@ -40,7 +40,6 @@ public class LoginActivity<email, password>
 
         // do the setup
         // hiding the action bar
-        getSupportActionBar().hide();
 
         // getting the FirebaseAuth instance
         mAuth = FirebaseAuth.getInstance();
