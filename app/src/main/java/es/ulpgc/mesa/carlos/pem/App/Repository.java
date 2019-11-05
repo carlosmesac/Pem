@@ -27,6 +27,8 @@ import com.google.firebase.storage.UploadTask;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
+import es.ulpgc.mesa.carlos.pem.Home.HomeAdapter;
+
 public class Repository implements Contract {
     private static Repository INSTANCE;
     private FirebaseAuth mAuth;
@@ -35,8 +37,8 @@ public class Repository implements Contract {
     private StorageReference storageRef;
     private DatabaseReference booksRef;
     private DatabaseReference allBooksRef;
-    String url;
-    int i = 0;
+    private String url;
+    private int i = 0;
     private DatabaseReference databaseReference;
     private ArrayList<BookItem> bookItemArrayList;
     private ArrayList<Like> likeArrayList;
@@ -317,7 +319,7 @@ public class Repository implements Contract {
      * Method that fills a list with all the user that liked a book that the current user uploaded
      *
      * @param callback
-     * @return And arrayList with all the users
+     * @return An arrayList with all the users
      */
     @Override
     public ArrayList<Like> fillInterestedPeopleArray(final FillInterestedPeopleArray callback) {
@@ -345,6 +347,36 @@ public class Repository implements Contract {
             }
         });
         return likeArrayList;
+    }
+
+    @Override
+    public ArrayList<BookItem> fillHomeBooksArray(final FillHomeBooksArray callback) {
+        databaseReference = FirebaseDatabase.getInstance().getReference().child("allBooks");
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                bookItemArrayList.clear();
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                    String autor = dataSnapshot1.child("autor").getValue(String.class);
+                    String image = dataSnapshot1.child("image").getValue(String.class);
+                    String isbn = dataSnapshot1.child("isbn").getValue(String.class);
+                    String title = dataSnapshot1.child("title").getValue(String.class);
+                    String user = dataSnapshot1.child("user").getValue(String.class);
+                    String email = dataSnapshot1.child("correo").getValue(String.class);
+                    BookItem bookItem = new BookItem(autor, image, isbn, title, user, email);
+                    bookItemArrayList.add(bookItem);
+
+
+                }
+                callback.onFillHomeBooksArray(false,bookItemArrayList);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+        return bookItemArrayList;
     }
 
 

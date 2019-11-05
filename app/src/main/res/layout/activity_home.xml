@@ -30,7 +30,7 @@
             android:layout_below="@+id/relLayout1"
             android:layout_marginBottom="60dp">
 
-            <include layout="@layout/layout_center_viewpager" />
+            <include layout="@layout/fragment_books" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/addBook"

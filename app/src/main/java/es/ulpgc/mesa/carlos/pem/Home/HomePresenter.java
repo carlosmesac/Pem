@@ -5,6 +5,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 
 import es.ulpgc.mesa.carlos.pem.App.BookItem;
 import es.ulpgc.mesa.carlos.pem.App.Contract;
@@ -94,6 +95,17 @@ public class HomePresenter implements HomeContract.Presenter {
     @Override
     public void selectBookListData(BookItem bookItem) {
 
+    }
+
+    @Override
+    public void homeBooksArrayList() {
+        model.fillHomeBooksArrayList(new Contract.FillHomeBooksArray() {
+            @Override
+            public void onFillHomeBooksArray(boolean error, ArrayList<BookItem> homeBooksArrayList) {
+                viewModel.bookItemArrayList=homeBooksArrayList;
+                view.get().displayHomeBooks(viewModel);
+            }
+        });
     }
 
 

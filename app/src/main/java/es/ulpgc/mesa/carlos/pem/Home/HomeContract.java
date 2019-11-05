@@ -1,5 +1,8 @@
 package es.ulpgc.mesa.carlos.pem.Home;
 
+import android.view.Menu;
+import android.view.MenuInflater;
+
 import java.lang.ref.WeakReference;
 
 import es.ulpgc.mesa.carlos.pem.App.BookItem;
@@ -11,6 +14,9 @@ public interface HomeContract {
         void injectPresenter(Presenter presenter);
 
         void displayData(HomeViewModel viewModel);
+
+        void displayHomeBooks(HomeViewModel viewModel);
+
     }
 
     interface Presenter {
@@ -32,6 +38,7 @@ public interface HomeContract {
 
         void selectBookListData(BookItem bookItem);
 
+        void homeBooksArrayList();
     }
 
     interface Model {
@@ -41,6 +48,7 @@ public interface HomeContract {
 
         void isLogin(Contract.IsLoginCallBack isLoginCallBack);
 
+        void fillHomeBooksArrayList(Contract.FillHomeBooksArray fillHomeBooksArray);
     }
 
     interface Router {

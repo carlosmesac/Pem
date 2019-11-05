@@ -44,6 +44,10 @@ public class HomeModel implements HomeContract.Model {
 
     }
 
+    @Override
+    public void fillHomeBooksArrayList(Contract.FillHomeBooksArray fillHomeBooksArray) {
+        repository.fillHomeBooksArray(fillHomeBooksArray);
+    }
 
 
 }
