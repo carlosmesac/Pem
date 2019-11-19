@@ -31,14 +31,6 @@ public class AddBookModel implements AddBookContract.Model {
         return "Hello";
     }
 
-    /**
-     * Method that checks if there is a book with the same ISBN upload by the user if it does not exist upload it
-     * @param isbn
-     * @param author
-     * @param title
-     * @param imageView
-     * @param callback
-     */
 
     @Override
     public void addBook(final String isbn, final String author, final String title, final ImageView imageView, final Contract.CreateBookEntryCallBack callback) {

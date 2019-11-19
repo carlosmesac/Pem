@@ -24,11 +24,7 @@ public class LoginModel implements LoginContract.Model {
         return "Hello";
     }
 
-    /**
-     * Method that checks if there is an user created with the email and password give
-     * @param email
-     * @param password
-     */
+
     @Override
     public void signIn(String email, String password,Contract.OnSignInCallback callback) {
         repository.signIn(email,password,callback);

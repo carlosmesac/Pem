@@ -1,3 +1,17 @@
+buildscript {
+    repositories {
+        maven { url 'https://plugins.gradle.org/m2/'}
+    }
+    dependencies {
+        classpath 'gradle.plugin.com.onesignal:onesignal-gradle-plugin:[0.12.4, 0.99.99]'
+    }
+}
+apply plugin: 'com.onesignal.androidsdk.onesignal-gradle-plugin'
+
+repositories {
+    maven { url 'https://maven.google.com' }
+}
+
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
 
@@ -7,6 +21,12 @@ android {
     buildToolsVersion "29.0.2"
     defaultConfig {
         applicationId "es.ulpgc.alu.mesa104.carlos.pem"
+        manifestPlaceholders = [
+                onesignal_app_id: '1d17caa3-26c9-4915-949f-081b2b15ab6f',
+                // Project number pulled from dashboard, local value is ignored.
+                onesignal_google_project_number: 'REMOTE'
+        ]
+
         minSdkVersion 25
         targetSdkVersion 29
         versionCode 1
@@ -30,7 +50,6 @@ dependencies {
     implementation 'com.google.firebase:firebase-firestore:17.1.2'
     implementation 'androidx.navigation:navigation-fragment:2.0.0'
     implementation 'androidx.navigation:navigation-ui:2.0.0'
-    implementation 'com.google.firebase:firebase-messaging:20.0.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
@@ -46,6 +65,10 @@ dependencies {
     //bottomNavigationView
     implementation 'com.github.ittianyu:BottomNavigationViewEx:2.0.4'
     implementation "com.android.support:design:29.0.0"
+
+    //Notification
+    implementation 'com.onesignal:OneSignal:[3.11.2, 3.99.99]'
+    implementation 'com.google.firebase:firebase-messaging:20.0.0'
 
 
     implementation("com.github.bumptech.glide:glide:4.9.0") {

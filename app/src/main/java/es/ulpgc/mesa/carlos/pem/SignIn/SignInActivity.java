@@ -45,7 +45,6 @@ public class SignInActivity
         newAcc = findViewById(R.id.buttonSignIn);
         SignInScreen.configure(this);
 
-        getSupportActionBar().hide();
 
 
         newAcc.setOnClickListener(new View.OnClickListener() {

@@ -17,13 +17,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
+import es.ulpgc.mesa.carlos.pem.App.Repository;
 import es.ulpgc.mesa.carlos.pem.R;
 import es.ulpgc.mesa.carlos.pem.App.BookItem;
 import es.ulpgc.mesa.carlos.pem.App.Like;
@@ -78,13 +82,32 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
                     @Override
                     public void onClick(View v) {
 
-                        //
-                        Like like= new Like(bookList.get(holder.getLayoutPosition()).getUser(),bookList.get(holder.getLayoutPosition()).getTitle(),mAuth.getCurrentUser().getUid());
-                        databaseReference.child("Likes").child(like.getPublisher()).child(like.getCurrentUser()).child("title").setValue(like.getTitle());
-                        databaseReference.child("Likes").child(like.getPublisher()).child(like.getCurrentUser()).child("user").setValue(like.getCurrentUser());
+                        final Like like= new Like(bookList.get(holder.getLayoutPosition()).getUser(),bookList.get(holder.getLayoutPosition()).getTitle(),mAuth.getCurrentUser().getUid());
+                        databaseReference.child("Likes").child(like.getPublisher()).child(like.getCurrentUser()+like.getTitle()).child("title").setValue(like.getTitle());
+                        databaseReference.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                String publisher=dataSnapshot.child("users").child(like.getPublisher()).child("username").getValue().toString();
+                                databaseReference.child("Likes").child(like.getPublisher()).child(like.getCurrentUser()+like.getTitle()).child("publisher").setValue(publisher);
 
-                        //Add to the database the book u liked
-                        databaseReference.child("BooksILike").child(mAuth.getCurrentUser().getUid()).child(bookItem.getTitle()+"_"+bookItem.getIsbn()).setValue(bookItem);
+                                String currentUser= dataSnapshot.child("users").child(like.getCurrentUser()).child("username").getValue().toString();
+                                databaseReference.child("Likes").child(like.getPublisher()).child(like.getCurrentUser()+like.getTitle()).child("user").setValue(currentUser);
+
+
+
+                                Repository.sendNotification(publisher,currentUser);
+
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+
+
+                        databaseReference.child("BooksILike").child(mAuth.getCurrentUser().getUid()).child(bookItem.getTitle() + "_" + bookItem.getIsbn()).setValue(bookItem);
+                        myDialog.dismiss();
                     }
                 });
                 contact.setOnClickListener(new View.OnClickListener() {

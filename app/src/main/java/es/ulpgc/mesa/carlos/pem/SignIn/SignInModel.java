@@ -27,25 +27,12 @@ public class SignInModel implements SignInContract.Model {
         return "Hello";
     }
 
-    /**
-     * This method checks if the DB has an user with the same username, if it exists dont create a new one but if it does not exist check if the email is used and if its not creates a new entry
-     * @param nombre
-     * @param nombreUsuario
-     * @param correo
-     * @param direccion
-     * @param contra
-     * @param callback
-     */
+
     @Override
     public void createAcc(final String nombre, final String nombreUsuario, final String correo, final String direccion, final String contra, final Contract.CreateAccountCallback callback) {
         repository.createAcc(nombre,nombreUsuario,correo,direccion,contra,callback);
     }
 
-    /**
-     * Method that create a new user authentication
-     * @param user
-     * @param callback
-     */
 
 
 }

@@ -96,10 +96,10 @@ public interface Contract {
         void onFillInterestedPeopleArray(boolean error, ArrayList<Like> likeArrayList);
     }
 
-    ArrayList<BookItem> fillHomeBooksArray(Contract.FillHomeBooksArray callback);
+    ArrayList<BookItem> fillUserArray(Contract.FillUserArray callback);
 
-    interface FillHomeBooksArray{
-        void onFillHomeBooksArray(boolean error, ArrayList<BookItem> homeBooksArrayList);
+    interface FillUserArray{
+        void onFillUserArray(boolean error, ArrayList<BookItem> bookItemArrayList);
     }
 
 }

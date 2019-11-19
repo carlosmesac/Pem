@@ -27,6 +27,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+import es.ulpgc.mesa.carlos.pem.App.Repository;
 import es.ulpgc.mesa.carlos.pem.R;
 import es.ulpgc.mesa.carlos.pem.App.BookItem;
 import es.ulpgc.mesa.carlos.pem.App.Like;
@@ -69,7 +70,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> im
             @Override
             public void onClick(View v) {
 
-                Button contact;
+                final Button contact;
                 Button user;
                 Button like;
                 TextView dialog_author;
@@ -110,6 +111,10 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> im
 
                                 String currentUser= dataSnapshot.child("users").child(like.getCurrentUser()).child("username").getValue().toString();
                                 databaseReference.child("Likes").child(like.getPublisher()).child(like.getCurrentUser()+like.getTitle()).child("user").setValue(currentUser);
+
+
+
+                                Repository.sendNotification(publisher,currentUser);
 
                             }
 

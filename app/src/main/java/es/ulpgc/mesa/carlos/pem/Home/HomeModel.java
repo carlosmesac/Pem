@@ -24,19 +24,14 @@ public class HomeModel implements HomeContract.Model {
         return "Hello";
     }
 
-    /**
-     * Method that log out the user and return to the log in screen
-     */
+
     @Override
     public void signOut(Contract.SignOutCallback callback) {
         repository.signOut(callback);
 
     }
 
-    /**
-     * Method that cheks if there is an user logged
-     * @param isLoginCallBack
-     */
+
     @Override
     public void isLogin(Contract.IsLoginCallBack isLoginCallBack) {
 

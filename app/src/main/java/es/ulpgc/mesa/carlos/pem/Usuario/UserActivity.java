@@ -19,6 +19,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+import es.ulpgc.mesa.carlos.pem.InterestedBooks.InterestedBooksAdapter;
+import es.ulpgc.mesa.carlos.pem.InterestedBooks.InterestedBooksViewModel;
 import es.ulpgc.mesa.carlos.pem.R;
 import es.ulpgc.mesa.carlos.pem.App.BookItem;
 import es.ulpgc.mesa.carlos.pem.Home.HomeAdapter;
@@ -31,7 +33,7 @@ public class UserActivity
     public static String TAG = UserActivity.class.getSimpleName();
     private DatabaseReference databaseReference;
     private UserContract.Presenter presenter;
-    private String message;
+    public static String message;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +48,6 @@ public class UserActivity
         bookItemArrayList = new ArrayList<>();
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         //Filling the array with the user books
-        fillArray();
         boton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -62,7 +63,7 @@ public class UserActivity
         super.onResume();
 
         // load the data
-        presenter.fetchData();
+        presenter.fillUserArray();
     }
 
     @Override
@@ -77,6 +78,10 @@ public class UserActivity
         this.presenter = presenter;
     }
 
+
+    /**
+     * Method that gets the username and displays it on the top of the app
+     */
     private void getUsername() {
         databaseReference = FirebaseDatabase.getInstance().getReference().child("users");
         Intent intent = getIntent();
@@ -97,34 +102,47 @@ public class UserActivity
 
     }
 
-    private void fillArray() {
-        TextView textView = findViewById(R.id.userBooksUsername);
-        textView.getText();
-        databaseReference=FirebaseDatabase.getInstance().getReference().child("booksUser").child(message);
-        databaseReference.addValueEventListener(new ValueEventListener() {
+    @Override
+    public void displayUserArray(final UserViewModel viewModel) {
+        bookItemArrayList = viewModel.bookItemArrayList;
+        runOnUiThread(new Runnable() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot dataSnapshot1: dataSnapshot.getChildren()){
-                    String autor= dataSnapshot1.child("autor").getValue(String.class);
-                    String image= dataSnapshot1.child("image").getValue(String.class);
-                    String isbn= dataSnapshot1.child("isbn").getValue(String.class);
-                    String title= dataSnapshot1.child("title").getValue(String.class);
-                    String user= dataSnapshot1.child("user").getValue(String.class);
-                    String email= dataSnapshot1.child("correo").getValue(String.class);
-                    BookItem bookItem= new BookItem(autor,image,isbn,title,user,email);
-                    bookItemArrayList.add(bookItem);
-
-                }
-
-                userAdapter= new UserAdapter(getApplicationContext(),bookItemArrayList);
+            public void run() {
+                userAdapter = new UserAdapter(getApplicationContext(),bookItemArrayList);
                 recyclerView.setAdapter(userAdapter);
 
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
             }
         });
-
     }
+//    private void fillArray() {
+//        TextView textView = findViewById(R.id.userBooksUsername);
+//        textView.getText();
+//        databaseReference=FirebaseDatabase.getInstance().getReference().child("booksUser").child(message);
+//        databaseReference.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                for(DataSnapshot dataSnapshot1: dataSnapshot.getChildren()){
+//                    String autor= dataSnapshot1.child("autor").getValue(String.class);
+//                    String image= dataSnapshot1.child("image").getValue(String.class);
+//                    String isbn= dataSnapshot1.child("isbn").getValue(String.class);
+//                    String title= dataSnapshot1.child("title").getValue(String.class);
+//                    String user= dataSnapshot1.child("user").getValue(String.class);
+//                    String email= dataSnapshot1.child("correo").getValue(String.class);
+//                    BookItem bookItem= new BookItem(autor,image,isbn,title,user,email);
+//                    bookItemArrayList.add(bookItem);
+//
+//                }
+//
+//                userAdapter= new UserAdapter(getApplicationContext(),bookItemArrayList);
+//                recyclerView.setAdapter(userAdapter);
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//            }
+//        });
+//
+//    }
 }

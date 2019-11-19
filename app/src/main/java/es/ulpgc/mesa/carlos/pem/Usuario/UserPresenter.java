@@ -1,6 +1,10 @@
 package es.ulpgc.mesa.carlos.pem.Usuario;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+
+import es.ulpgc.mesa.carlos.pem.App.BookItem;
+import es.ulpgc.mesa.carlos.pem.App.Contract;
 
 public class UserPresenter implements UserContract.Presenter {
 
@@ -46,6 +50,17 @@ public class UserPresenter implements UserContract.Presenter {
     @Override
     public void goHome() {
         router.goHome();
+    }
+
+    @Override
+    public void fillUserArray() {
+        model.fillUserArray(new Contract.FillUserArray() {
+            @Override
+            public void onFillUserArray(boolean error, ArrayList<BookItem> bookItemArrayList) {
+                viewModel.bookItemArrayList=bookItemArrayList;
+                view.get().displayUserArray(viewModel);
+            }
+        });
     }
 
     @Override

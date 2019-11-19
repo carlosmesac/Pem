@@ -4,8 +4,11 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.StrictMode;
 import android.util.Log;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -23,11 +26,19 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.onesignal.OneSignal;
 
 import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Scanner;
 
-import es.ulpgc.mesa.carlos.pem.Home.HomeAdapter;
+import es.ulpgc.mesa.carlos.pem.Home.HomeActivity;
+import es.ulpgc.mesa.carlos.pem.R;
+import es.ulpgc.mesa.carlos.pem.Usuario.UserActivity;
+import es.ulpgc.mesa.carlos.pem.Usuario.UserViewModel;
 
 public class Repository implements Contract {
     private static Repository INSTANCE;
@@ -37,8 +48,8 @@ public class Repository implements Contract {
     private StorageReference storageRef;
     private DatabaseReference booksRef;
     private DatabaseReference allBooksRef;
-    private String url;
-    private int i = 0;
+    String url;
+    int i = 0;
     private DatabaseReference databaseReference;
     private ArrayList<BookItem> bookItemArrayList;
     private ArrayList<Like> likeArrayList;
@@ -71,6 +82,77 @@ public class Repository implements Contract {
         allBooksRef = FirebaseDatabase.getInstance().getReference().child("allBooks");
 
         this.context = context;
+
+    }
+
+    /**
+     * Method that send a push notification to the book owner
+     *
+     * @param currentUser
+     * @param publisher
+     */
+    public static void sendNotification(final String publisher, final String currentUser) {
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                int SDK_INT = android.os.Build.VERSION.SDK_INT;
+                if (SDK_INT > 8) {
+                    StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+                            .permitAll().build();
+                    StrictMode.setThreadPolicy(policy);
+
+                    try {
+                        String jsonResponse;
+
+                        URL url = new URL("https://onesignal.com/api/v1/notifications");
+                        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+                        con.setUseCaches(false);
+                        con.setDoOutput(true);
+                        con.setDoInput(true);
+
+                        con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+                        con.setRequestProperty("Authorization", "Basic NTc3M2RmMTUtOTVlMy00NGMxLTg0MmUtNTA0ODA4NDZjNWFi");
+                        con.setRequestMethod("POST");
+
+                        String strJsonBody = "{"
+                                + "\"app_id\": \"1d17caa3-26c9-4915-949f-081b2b15ab6f\","
+
+                                + "\"filters\": [{\"field\": \"tag\", \"key\": \"User_ID\", \"relation\": \"=\", \"value\": \"" + publisher + "\"}],"
+
+                                + "\"data\": {\"foo\": \"bar\"},"
+                                + "\"contents\": {\"en\": \"A " + currentUser + " le Interesa un libro tuyo\"}"
+                                + "}";
+
+
+                        System.out.println("strJsonBody:\n" + strJsonBody);
+
+                        byte[] sendBytes = strJsonBody.getBytes("UTF-8");
+                        con.setFixedLengthStreamingMode(sendBytes.length);
+
+                        OutputStream outputStream = con.getOutputStream();
+                        outputStream.write(sendBytes);
+
+                        int httpResponse = con.getResponseCode();
+                        System.out.println("httpResponse: " + httpResponse);
+
+                        if (httpResponse >= HttpURLConnection.HTTP_OK
+                                && httpResponse < HttpURLConnection.HTTP_BAD_REQUEST) {
+                            Scanner scanner = new Scanner(con.getInputStream(), "UTF-8");
+                            jsonResponse = scanner.useDelimiter("\\A").hasNext() ? scanner.next() : "";
+                            scanner.close();
+                        } else {
+                            Scanner scanner = new Scanner(con.getErrorStream(), "UTF-8");
+                            jsonResponse = scanner.useDelimiter("\\A").hasNext() ? scanner.next() : "";
+                            scanner.close();
+                        }
+                        System.out.println("jsonResponse:\n" + jsonResponse);
+
+                    } catch (Throwable t) {
+                        t.printStackTrace();
+                    }
+                }
+            }
+        });
 
     }
 
@@ -142,6 +224,7 @@ public class Repository implements Contract {
      */
     @Override
     public void signOut(Contract.SignOutCallback callback) {
+        OneSignal.setSubscription(false);
         mAuth.signOut();
         callback.signOut(false);
 
@@ -319,7 +402,7 @@ public class Repository implements Contract {
      * Method that fills a list with all the user that liked a book that the current user uploaded
      *
      * @param callback
-     * @return An arrayList with all the users
+     * @return And arrayList with all the users
      */
     @Override
     public ArrayList<Like> fillInterestedPeopleArray(final FillInterestedPeopleArray callback) {
@@ -349,9 +432,15 @@ public class Repository implements Contract {
         return likeArrayList;
     }
 
+    /**
+     * MEthod that fills an array with the books of a certain user
+     *
+     * @param callback
+     * @return array filled with all the books
+     */
     @Override
-    public ArrayList<BookItem> fillHomeBooksArray(final FillHomeBooksArray callback) {
-        databaseReference = FirebaseDatabase.getInstance().getReference().child("allBooks");
+    public ArrayList<BookItem> fillUserArray(final FillUserArray callback) {
+        databaseReference = FirebaseDatabase.getInstance().getReference().child("booksUser").child(UserActivity.message);
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -365,10 +454,8 @@ public class Repository implements Contract {
                     String email = dataSnapshot1.child("correo").getValue(String.class);
                     BookItem bookItem = new BookItem(autor, image, isbn, title, user, email);
                     bookItemArrayList.add(bookItem);
-
-
                 }
-                callback.onFillHomeBooksArray(false,bookItemArrayList);
+                callback.onFillUserArray(false,bookItemArrayList);
 
             }
 
