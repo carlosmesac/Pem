@@ -85,76 +85,6 @@ public class Repository implements Contract {
 
     }
 
-    /**
-     * Method that send a push notification to the book owner
-     *
-     * @param currentUser
-     * @param publisher
-     */
-    public static void sendNotification(final String publisher, final String currentUser) {
-        AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
-                int SDK_INT = android.os.Build.VERSION.SDK_INT;
-                if (SDK_INT > 8) {
-                    StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
-                            .permitAll().build();
-                    StrictMode.setThreadPolicy(policy);
-
-                    try {
-                        String jsonResponse;
-
-                        URL url = new URL("https://onesignal.com/api/v1/notifications");
-                        HttpURLConnection con = (HttpURLConnection) url.openConnection();
-                        con.setUseCaches(false);
-                        con.setDoOutput(true);
-                        con.setDoInput(true);
-
-                        con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-                        con.setRequestProperty("Authorization", "Basic NTc3M2RmMTUtOTVlMy00NGMxLTg0MmUtNTA0ODA4NDZjNWFi");
-                        con.setRequestMethod("POST");
-
-                        String strJsonBody = "{"
-                                + "\"app_id\": \"1d17caa3-26c9-4915-949f-081b2b15ab6f\","
-
-                                + "\"filters\": [{\"field\": \"tag\", \"key\": \"User_ID\", \"relation\": \"=\", \"value\": \"" + publisher + "\"}],"
-
-                                + "\"data\": {\"foo\": \"bar\"},"
-                                + "\"contents\": {\"en\": \"A " + currentUser + " le Interesa un libro tuyo\"}"
-                                + "}";
-
-
-                        System.out.println("strJsonBody:\n" + strJsonBody);
-
-                        byte[] sendBytes = strJsonBody.getBytes("UTF-8");
-                        con.setFixedLengthStreamingMode(sendBytes.length);
-
-                        OutputStream outputStream = con.getOutputStream();
-                        outputStream.write(sendBytes);
-
-                        int httpResponse = con.getResponseCode();
-                        System.out.println("httpResponse: " + httpResponse);
-
-                        if (httpResponse >= HttpURLConnection.HTTP_OK
-                                && httpResponse < HttpURLConnection.HTTP_BAD_REQUEST) {
-                            Scanner scanner = new Scanner(con.getInputStream(), "UTF-8");
-                            jsonResponse = scanner.useDelimiter("\\A").hasNext() ? scanner.next() : "";
-                            scanner.close();
-                        } else {
-                            Scanner scanner = new Scanner(con.getErrorStream(), "UTF-8");
-                            jsonResponse = scanner.useDelimiter("\\A").hasNext() ? scanner.next() : "";
-                            scanner.close();
-                        }
-                        System.out.println("jsonResponse:\n" + jsonResponse);
-
-                    } catch (Throwable t) {
-                        t.printStackTrace();
-                    }
-                }
-            }
-        });
-
-    }
 
 
     /**
@@ -456,6 +386,36 @@ public class Repository implements Contract {
                     bookItemArrayList.add(bookItem);
                 }
                 callback.onFillUserArray(false,bookItemArrayList);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+        return bookItemArrayList;
+    }
+
+    @Override
+    public ArrayList<BookItem> fillHomeBooksArray(final FillHomeBooksArray callback) {
+        databaseReference = FirebaseDatabase.getInstance().getReference().child("allBooks");
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                bookItemArrayList.clear();
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                    String autor = dataSnapshot1.child("autor").getValue(String.class);
+                    String image = dataSnapshot1.child("image").getValue(String.class);
+                    String isbn = dataSnapshot1.child("isbn").getValue(String.class);
+                    String title = dataSnapshot1.child("title").getValue(String.class);
+                    String user = dataSnapshot1.child("user").getValue(String.class);
+                    String email = dataSnapshot1.child("correo").getValue(String.class);
+                    BookItem bookItem = new BookItem(autor, image, isbn, title, user, email);
+                    bookItemArrayList.add(bookItem);
+
+
+                }
+                callback.onFillHomeBooksArray(false,bookItemArrayList);
 
             }
 

@@ -85,7 +85,6 @@ public class InterestedBooksAdapter extends RecyclerView.Adapter<InterestedBooks
                         booksILike.child(mAuth.getCurrentUser().getUid()).child(bookItem.getTitle() + "_" + bookItem.getIsbn()).removeValue();
                         bookList.clear();
                         myDialog.dismiss();
-
                         notifyDataSetChanged();
                     }
                 });

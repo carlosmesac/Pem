@@ -37,8 +37,8 @@ public class MyBooksActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_books);
-        TextView textView= findViewById(R.id.title_cabecera);
-        textView.setText(R.string.title_myBooks);
+        getSupportActionBar().setTitle(R.string.title_myBooks);
+
 
         setupBottomNavigationView();
         //Iniciacion del recyclerView

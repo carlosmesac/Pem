@@ -7,6 +7,7 @@ import java.util.ArrayList;
 public interface Contract {
     /**
      * Method that creates a new account with the values passed in the parameters
+     *
      * @param nombre
      * @param nombreUsuario
      * @param correo
@@ -18,45 +19,49 @@ public interface Contract {
 
 
     //Lo que se llama cuando se crea un usuario
-    interface CreateAccountCallback{
+    interface CreateAccountCallback {
         void onAccountCreated(boolean error);
     }
 
     /**
      * Method that logs in if the user is on the Firebase Authentication dB
+     *
      * @param email
      * @param password
      * @param callback
      */
     void signIn(String email, String password, Contract.OnSignInCallback callback);
 
-    interface OnSignInCallback{
+    interface OnSignInCallback {
         void onSignIn(boolean error);
     }
 
     /**
      * Method that disconnects the current user
+     *
      * @param callback
      */
     void signOut(Contract.SignOutCallback callback);
 
-    interface SignOutCallback{
+    interface SignOutCallback {
         void signOut(boolean error);
     }
 
     /**
      * Method that checks if is there an user logged
+     *
      * @param isLoginCallBack
      */
     void isLogin(Contract.IsLoginCallBack isLoginCallBack);
 
 
-    interface IsLoginCallBack{
+    interface IsLoginCallBack {
         void isLogin(boolean error);
     }
 
     /**
-     *Method that add the data values to the database and storage the image into firebase Storage
+     * Method that add the data values to the database and storage the image into firebase Storage
+     *
      * @param isbn
      * @param author
      * @param title
@@ -71,35 +76,46 @@ public interface Contract {
 
     /**
      * MEthod that fills an array with all the books in the firebase database
+     *
      * @param callback
      * @return array filled with all the books
      */
     ArrayList<BookItem> fillBooksArray(Contract.FillBooksArray callback);
 
-    interface FillBooksArray{
+    interface FillBooksArray {
         void onFillBooksArray(boolean error, ArrayList<BookItem> bookItemArrayList);
     }
+
     /**
      * MEthod that fills an array with all the books that the user liked in the firebase database
+     *
      * @param callback
      * @return array filled with all the books
      */
     ArrayList<BookItem> fillInterestedBooksArray(Contract.FillInterestedBooksArray callback);
 
-    interface FillInterestedBooksArray{
+    interface FillInterestedBooksArray {
         void onFillInterestedBooksArray(boolean error, ArrayList<BookItem> bookItemArrayList);
     }
 
     ArrayList<Like> fillInterestedPeopleArray(Contract.FillInterestedPeopleArray callback);
 
-    interface FillInterestedPeopleArray{
+    interface FillInterestedPeopleArray {
         void onFillInterestedPeopleArray(boolean error, ArrayList<Like> likeArrayList);
     }
 
     ArrayList<BookItem> fillUserArray(Contract.FillUserArray callback);
 
-    interface FillUserArray{
+    interface FillUserArray {
         void onFillUserArray(boolean error, ArrayList<BookItem> bookItemArrayList);
     }
+    ArrayList<BookItem> fillHomeBooksArray(Contract.FillHomeBooksArray callback);
 
+    interface FillHomeBooksArray{
+        void onFillHomeBooksArray(boolean error, ArrayList<BookItem> homeBooksArrayList);
+    }
 }
+
+
+
+   

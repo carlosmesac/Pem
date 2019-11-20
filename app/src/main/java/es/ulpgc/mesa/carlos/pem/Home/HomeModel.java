@@ -13,9 +13,8 @@ public class HomeModel implements HomeContract.Model {
 
 
     public HomeModel(Contract repository) {
-        mAuth= FirebaseAuth.getInstance();
-        this.presenter=presenter;
-        this.repository=repository;
+        mAuth = FirebaseAuth.getInstance();
+        this.repository = repository;
     }
 
     @Override
@@ -43,6 +42,4 @@ public class HomeModel implements HomeContract.Model {
     public void fillHomeBooksArrayList(Contract.FillHomeBooksArray fillHomeBooksArray) {
         repository.fillHomeBooksArray(fillHomeBooksArray);
     }
-
-
 }

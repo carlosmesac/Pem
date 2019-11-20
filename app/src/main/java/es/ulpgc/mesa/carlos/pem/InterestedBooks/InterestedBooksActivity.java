@@ -38,9 +38,8 @@ public class InterestedBooksActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_interested_books);
 
+        getSupportActionBar().setTitle(R.string.title_interestedBooks);
 
-        TextView textView= findViewById(R.id.title_cabecera);
-        textView.setText(R.string.title_interestedBooks);
 
         setupBottomNavigationView();
         //Iniciacion del recyclerView

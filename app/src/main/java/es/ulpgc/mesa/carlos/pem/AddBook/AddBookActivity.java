@@ -147,7 +147,6 @@ public class AddBookActivity
         if(ContextCompat.checkSelfPermission(this, permission)!= PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(this, new String[]{permission}, requestCode);
         }else{
-            Toast.makeText(this, "Ya tienes permisos", Toast.LENGTH_SHORT).show();
         }
     }
 }

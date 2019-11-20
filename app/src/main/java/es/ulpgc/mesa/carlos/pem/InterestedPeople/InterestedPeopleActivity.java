@@ -34,8 +34,8 @@ public class InterestedPeopleActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_interested_people);
-        TextView textView= findViewById(R.id.title_cabecera);
-        textView.setText(R.string.title_interestedPeople);
+        getSupportActionBar().setTitle(R.string.title_interestedPeople);
+
 
         //Init recyclerView
         recyclerView = findViewById(R.id.recyclerIdInterestedPeople);

@@ -37,7 +37,6 @@
         <activity
             android:name="es.ulpgc.mesa.carlos.pem.Home.HomeActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
 
             >
             <intent-filter>
@@ -50,10 +49,12 @@
         </activity>
         <activity
             android:name="es.ulpgc.mesa.carlos.pem.SignIn.SignInActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:screenOrientation="portrait" />
         <activity
             android:name="es.ulpgc.mesa.carlos.pem.Login.LoginActivity"
             android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
 
             />
         <activity
@@ -63,17 +64,14 @@
             />
         <activity
             android:name="es.ulpgc.mesa.carlos.pem.Usuario.UserActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name=".InterestedPeople.InterestedPeopleActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:name=".InterestedPeople.InterestedPeopleActivity"/>
         <activity
-            android:name=".InterestedBooks.InterestedBooksActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:name=".InterestedBooks.InterestedBooksActivity"/>
         <activity
             android:name=".MyBooks.MyBooksActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             />
 
 

@@ -12,22 +12,12 @@
         android:layout_height="match_parent">
 
 
-        <!-- top toolbar -->
-        <RelativeLayout
-            android:id="@+id/relLayout1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <include layout="@layout/layout_top_tabs" />
-
-        </RelativeLayout>
 
         <!-- Middle section (body) -->
         <RelativeLayout
             android:id="@+id/relLayout2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/relLayout1"
             android:layout_marginBottom="60dp">
 
             <include layout="@layout/fragment_interestedpeople" />
