@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -47,14 +48,16 @@ public class UserActivity
         recyclerView = findViewById(R.id.recyclerIdUserBooks);
         bookItemArrayList = new ArrayList<>();
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
-        //Filling the array with the user books
+
+
         boton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 presenter.goHome();
             }
         });
-        // do the setup
+
+
         UserScreen.configure(this);
     }
 

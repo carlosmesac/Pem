@@ -44,18 +44,19 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
     public static String TAG = UserAdapter.class.getSimpleName();
 
     Dialog myDialog;
-    private DatabaseReference databaseReference= FirebaseDatabase.getInstance().getReference();
-    private DatabaseReference allBooksRef= FirebaseDatabase.getInstance().getReference().child("allBooks");
+    private DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+    private DatabaseReference allBooksRef = FirebaseDatabase.getInstance().getReference().child("allBooks");
     private DatabaseReference booksRef = FirebaseDatabase.getInstance().getReference().child("booksUser");
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private StorageReference storageRef = FirebaseStorage.getInstance().getReference();
     private Context context;
-private String publisher="";
-private String currentUser="";
+    private String publisher = "";
+    private String currentUser = "";
+    private int currentItem=0;
 
-    public UserAdapter(Context context,ArrayList<BookItem> bookList) {
+    public UserAdapter(Context context, ArrayList<BookItem> bookList) {
         this.bookList = bookList;
-        this.context=context;
+        this.context = context;
     }
 
     @NonNull
@@ -76,29 +77,30 @@ private String currentUser="";
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                currentItem=holder.getLayoutPosition();
                 Button like = (Button) myDialog.findViewById(R.id.dialogUserLike);
-                Button contact =(Button) myDialog.findViewById(R.id.dialogUserContact) ;
+                Button contact = (Button) myDialog.findViewById(R.id.dialogUserContact);
                 TextView dialog_author = (TextView) myDialog.findViewById(R.id.dialogUserAuthor);
                 TextView dialog_title = (TextView) myDialog.findViewById(R.id.dialogUserTitle);
                 ImageView dialog_image = (ImageView) myDialog.findViewById(R.id.dialogUserImage);
-                dialog_author.setText(bookList.get(holder.getLayoutPosition()).getAutor());
-                dialog_title.setText(bookList.get(holder.getLayoutPosition()).getTitle());
-                loadImageFromURL(dialog_image, bookList.get(holder.getLayoutPosition()).getImage());
-                final BookItem bookItem= bookList.get(holder.getAdapterPosition());
+                dialog_author.setText(bookList.get(currentItem).getAutor());
+                dialog_title.setText(bookList.get(currentItem).getTitle());
+                loadImageFromURL(dialog_image, bookList.get(currentItem).getImage());
+                final BookItem bookItem = bookList.get(holder.getAdapterPosition());
                 like.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
-                        final Like like= new Like(bookList.get(holder.getLayoutPosition()).getUser(),bookList.get(holder.getLayoutPosition()).getTitle(),mAuth.getCurrentUser().getUid());
-                        databaseReference.child("Likes").child(like.getPublisher()).child(like.getCurrentUser()+like.getTitle()).child("title").setValue(like.getTitle());
+                        final Like like = new Like(bookList.get(currentItem).getUser(), bookList.get(currentItem).getTitle(), mAuth.getCurrentUser().getUid());
+                        databaseReference.child("Likes").child(like.getPublisher()).child(like.getCurrentUser() + like.getTitle()).child("title").setValue(like.getTitle());
                         databaseReference.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                publisher =dataSnapshot.child("users").child(like.getPublisher()).child("username").getValue().toString();
-                                databaseReference.child("Likes").child(like.getPublisher()).child(like.getCurrentUser()+like.getTitle()).child("publisher").setValue(publisher);
+                                publisher = dataSnapshot.child("users").child(like.getPublisher()).child("username").getValue().toString();
+                                databaseReference.child("Likes").child(like.getPublisher()).child(like.getCurrentUser() + like.getTitle()).child("publisher").setValue(publisher);
 
                                 currentUser = dataSnapshot.child("users").child(like.getCurrentUser()).child("username").getValue().toString();
-                                databaseReference.child("Likes").child(like.getPublisher()).child(like.getCurrentUser()+like.getTitle()).child("user").setValue(currentUser);
+                                databaseReference.child("Likes").child(like.getPublisher()).child(like.getCurrentUser() + like.getTitle()).child("user").setValue(currentUser);
 
                             }
 
@@ -118,19 +120,19 @@ private String currentUser="";
                     @Override
                     public void onClick(View v) {
                         String CC = "";
-                        String[] TO = {bookList.get(holder.getLayoutPosition()).getCorreo()};
+                        String[] TO = {bookList.get(currentItem).getCorreo()};
                         Intent emailIntent = new Intent(Intent.ACTION_SEND);
                         emailIntent.setData(Uri.parse("mailto:"));
                         emailIntent.setType("text/plain");
                         emailIntent.putExtra(Intent.EXTRA_EMAIL, TO);
                         emailIntent.putExtra(Intent.EXTRA_CC, CC);
-                        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Interesado en el libro: "+bookList.get(holder.getLayoutPosition()).getTitle());
-                        context.startActivity(Intent.createChooser(emailIntent,"Enviar email."));
+                        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Interesado en el libro: " + bookList.get(currentItem).getTitle());
+                        context.startActivity(Intent.createChooser(emailIntent, "Enviar email."));
 
                     }
                 });
 
-                Log.d(TAG, "Click on" + holder.getLayoutPosition());
+                Log.d(TAG, "Click on" + currentItem);
                 myDialog.show();
 
             }
@@ -151,63 +153,63 @@ private String currentUser="";
      */
     private static void sendNotification(final String publisher, final String currentUser) {
 
-                int SDK_INT = android.os.Build.VERSION.SDK_INT;
-                if (SDK_INT > 8) {
-                    StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
-                            .permitAll().build();
-                    StrictMode.setThreadPolicy(policy);
+        int SDK_INT = android.os.Build.VERSION.SDK_INT;
+        if (SDK_INT > 8) {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+                    .permitAll().build();
+            StrictMode.setThreadPolicy(policy);
 
-                    try {
-                        String jsonResponse;
+            try {
+                String jsonResponse;
 
-                        URL url = new URL("https://onesignal.com/api/v1/notifications");
-                        HttpURLConnection con = (HttpURLConnection) url.openConnection();
-                        con.setUseCaches(false);
-                        con.setDoOutput(true);
-                        con.setDoInput(true);
+                URL url = new URL("https://onesignal.com/api/v1/notifications");
+                HttpURLConnection con = (HttpURLConnection) url.openConnection();
+                con.setUseCaches(false);
+                con.setDoOutput(true);
+                con.setDoInput(true);
 
-                        con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-                        con.setRequestProperty("Authorization", "Basic NTc3M2RmMTUtOTVlMy00NGMxLTg0MmUtNTA0ODA4NDZjNWFi");
-                        con.setRequestMethod("POST");
+                con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+                con.setRequestProperty("Authorization", "Basic NTc3M2RmMTUtOTVlMy00NGMxLTg0MmUtNTA0ODA4NDZjNWFi");
+                con.setRequestMethod("POST");
 
-                        String strJsonBody = "{"
-                                + "\"app_id\": \"1d17caa3-26c9-4915-949f-081b2b15ab6f\","
+                String strJsonBody = "{"
+                        + "\"app_id\": \"1d17caa3-26c9-4915-949f-081b2b15ab6f\","
 
-                                + "\"filters\": [{\"field\": \"tag\", \"key\": \"User_ID\", \"relation\": \"=\", \"value\": \"" + publisher + "\"}],"
+                        + "\"filters\": [{\"field\": \"tag\", \"key\": \"User_ID\", \"relation\": \"=\", \"value\": \"" + publisher + "\"}],"
 
-                                + "\"data\": {\"foo\": \"bar\"},"
-                                + "\"contents\": {\"en\": \"A " + currentUser + " le Interesa un libro tuyo\"}"
-                                + "}";
+                        + "\"data\": {\"foo\": \"bar\"},"
+                        + "\"contents\": {\"en\": \"A " + currentUser + " le Interesa un libro tuyo\"}"
+                        + "}";
 
 
-                        System.out.println("strJsonBody:\n" + strJsonBody);
+                System.out.println("strJsonBody:\n" + strJsonBody);
 
-                        byte[] sendBytes = strJsonBody.getBytes("UTF-8");
-                        con.setFixedLengthStreamingMode(sendBytes.length);
+                byte[] sendBytes = strJsonBody.getBytes("UTF-8");
+                con.setFixedLengthStreamingMode(sendBytes.length);
 
-                        OutputStream outputStream = con.getOutputStream();
-                        outputStream.write(sendBytes);
+                OutputStream outputStream = con.getOutputStream();
+                outputStream.write(sendBytes);
 
-                        int httpResponse = con.getResponseCode();
-                        System.out.println("httpResponse: " + httpResponse);
+                int httpResponse = con.getResponseCode();
+                System.out.println("httpResponse: " + httpResponse);
 
-                        if (httpResponse >= HttpURLConnection.HTTP_OK
-                                && httpResponse < HttpURLConnection.HTTP_BAD_REQUEST) {
-                            Scanner scanner = new Scanner(con.getInputStream(), "UTF-8");
-                            jsonResponse = scanner.useDelimiter("\\A").hasNext() ? scanner.next() : "";
-                            scanner.close();
-                        } else {
-                            Scanner scanner = new Scanner(con.getErrorStream(), "UTF-8");
-                            jsonResponse = scanner.useDelimiter("\\A").hasNext() ? scanner.next() : "";
-                            scanner.close();
-                        }
-                        System.out.println("jsonResponse:\n" + jsonResponse);
-
-                    } catch (Throwable t) {
-                        t.printStackTrace();
-                    }
+                if (httpResponse >= HttpURLConnection.HTTP_OK
+                        && httpResponse < HttpURLConnection.HTTP_BAD_REQUEST) {
+                    Scanner scanner = new Scanner(con.getInputStream(), "UTF-8");
+                    jsonResponse = scanner.useDelimiter("\\A").hasNext() ? scanner.next() : "";
+                    scanner.close();
+                } else {
+                    Scanner scanner = new Scanner(con.getErrorStream(), "UTF-8");
+                    jsonResponse = scanner.useDelimiter("\\A").hasNext() ? scanner.next() : "";
+                    scanner.close();
                 }
+                System.out.println("jsonResponse:\n" + jsonResponse);
+
+            } catch (Throwable t) {
+                t.printStackTrace();
             }
+        }
+    }
 
 
     @Override

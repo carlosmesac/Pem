@@ -26,6 +26,7 @@ public interface UserContract {
         void goHome();
 
         void fillUserArray();
+
     }
 
     interface Model {

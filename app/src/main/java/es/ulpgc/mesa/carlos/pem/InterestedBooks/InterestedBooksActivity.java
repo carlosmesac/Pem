@@ -85,6 +85,10 @@ public class InterestedBooksActivity
             }
         });
     }
+
+    /**
+     * Set the bottomNavigationView
+     */
     private void setupBottomNavigationView(){
         BottomNavigationViewEx bottomNavigationView = (BottomNavigationViewEx) findViewById(R.id.bottomNavView);
         BottomNavigationViewHelper.setupBottomNavigationView(bottomNavigationView);

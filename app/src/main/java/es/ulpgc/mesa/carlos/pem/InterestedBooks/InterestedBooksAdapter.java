@@ -35,6 +35,7 @@ public class InterestedBooksAdapter extends RecyclerView.Adapter<InterestedBooks
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private Context context;
     public static final String EXTRA_MESSAGE = "com.example.myfirstapp.MESSAGE";
+    private int currentItem=0;
 
     public InterestedBooksAdapter(Context context, ArrayList<BookItem> bookList) {
         this.context = context;
@@ -61,6 +62,7 @@ public class InterestedBooksAdapter extends RecyclerView.Adapter<InterestedBooks
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                currentItem=holder.getLayoutPosition();
                 Button contact;
                 Button user;
                 Button delete;
@@ -73,9 +75,9 @@ public class InterestedBooksAdapter extends RecyclerView.Adapter<InterestedBooks
                 dialog_author = (TextView) myDialog.findViewById(R.id.dialogInterestedAuthor);
                 dialog_title = (TextView) myDialog.findViewById(R.id.dialogInterestedTitle);
                 dialog_image = (ImageView) myDialog.findViewById(R.id.dialogInterestedImage);
-                dialog_author.setText(bookList.get(holder.getLayoutPosition()).getAutor());
-                dialog_title.setText(bookList.get(holder.getLayoutPosition()).getTitle());
-                loadImageFromURL(dialog_image, bookList.get(holder.getLayoutPosition()).getImage());
+                dialog_author.setText(bookList.get(currentItem).getAutor());
+                dialog_title.setText(bookList.get(currentItem).getTitle());
+                loadImageFromURL(dialog_image, bookList.get(currentItem).getImage());
 
 
                 final BookItem bookItem = bookList.get(holder.getAdapterPosition());
@@ -92,7 +94,7 @@ public class InterestedBooksAdapter extends RecyclerView.Adapter<InterestedBooks
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(context, UserActivity.class);
-                        String message = bookList.get(holder.getLayoutPosition()).getUser();
+                        String message = bookList.get(currentItem).getUser();
                         intent.putExtra(EXTRA_MESSAGE, message);
                         context.startActivity(intent);
 
@@ -102,20 +104,20 @@ public class InterestedBooksAdapter extends RecyclerView.Adapter<InterestedBooks
                     @Override
                     public void onClick(View v) {
                         String CC = "";
-                        String[] TO = {bookList.get(holder.getLayoutPosition()).getCorreo()};
+                        String[] TO = {bookList.get(currentItem).getCorreo()};
                         Intent emailIntent = new Intent(Intent.ACTION_SEND);
                         emailIntent.setData(Uri.parse("mailto:"));
                         emailIntent.setType("text/plain");
                         emailIntent.putExtra(Intent.EXTRA_EMAIL, TO);
                         emailIntent.putExtra(Intent.EXTRA_CC, CC);
-                        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Interesado en el libro: "+bookList.get(holder.getLayoutPosition()).getTitle());
+                        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Interesado en el libro: "+bookList.get(currentItem).getTitle());
                         context.startActivity(Intent.createChooser(emailIntent,"Enviar email."));
 
 
                     }
                 });
 
-                Log.d(TAG, "Click on" + holder.getLayoutPosition());
+                Log.d(TAG, "Click on" + currentItem);
                 myDialog.show();
 
             }

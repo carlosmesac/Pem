@@ -34,7 +34,7 @@ public class MyBooksAdapter extends RecyclerView.Adapter<MyBooksAdapter.ViewHold
     private DatabaseReference booksRef = FirebaseDatabase.getInstance().getReference().child("booksUser");
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-
+    private int currentItem=0;
 
     public MyBooksAdapter(ArrayList<BookItem> bookList) {
         this.bookList = bookList;
@@ -63,14 +63,15 @@ public class MyBooksAdapter extends RecyclerView.Adapter<MyBooksAdapter.ViewHold
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                currentItem=holder.getLayoutPosition();
                 Button delete = (Button) myDialog.findViewById(R.id.dialogDelete);
                 TextView dialog_author = (TextView) myDialog.findViewById(R.id.dialogAuthor);
                 TextView dialog_title = (TextView) myDialog.findViewById(R.id.dialogTitle);
                 ImageView dialog_image = (ImageView) myDialog.findViewById(R.id.dialogImage);
-                dialog_author.setText(bookList.get(holder.getLayoutPosition()).getAutor());
-                dialog_title.setText(bookList.get(holder.getLayoutPosition()).getTitle());
-                loadImageFromURL(dialog_image, bookList.get(holder.getLayoutPosition()).getImage());
-                final BookItem bookItem = bookList.get(holder.getAdapterPosition());
+                dialog_author.setText(bookList.get(currentItem).getAutor());
+                dialog_title.setText(bookList.get(currentItem).getTitle());
+                loadImageFromURL(dialog_image, bookList.get(currentItem).getImage());
+                final BookItem bookItem = bookList.get(currentItem);
 
                 myDialog.show();
                 delete.setOnClickListener(new View.OnClickListener() {
@@ -87,7 +88,7 @@ public class MyBooksAdapter extends RecyclerView.Adapter<MyBooksAdapter.ViewHold
                 });
 
 
-                Log.d(TAG, "Click on" + holder.getLayoutPosition());
+                Log.d(TAG, "Click on" + currentItem);
 
 
             }
