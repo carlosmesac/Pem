@@ -87,13 +87,13 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
                 dialog_title.setText(bookList.get(currentItem).getTitle());
                 loadImageFromURL(dialog_image, bookList.get(currentItem).getImage());
                 final BookItem bookItem = bookList.get(holder.getAdapterPosition());
-
-
-                //Obtener nombre de usuario actual
+                //Obtenemos el username del usuario actual como de la persona que publico el libro
+                final Like bookLike= new Like(bookList.get(currentItem).getUser(),bookList.get(currentItem).getTitle(),mAuth.getCurrentUser().getUid());
                 databaseReference.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        currentUser=dataSnapshot.child("users").child(mAuth.getCurrentUser().getUid()).child("username").getValue().toString();
+                        currentUser= dataSnapshot.child("users").child(mAuth.getCurrentUser().getUid()).child("username").getValue().toString();
+                        publisher = dataSnapshot.child("users").child(bookLike.getPublisher()).child("username").getValue().toString();
                     }
 
                     @Override
@@ -108,8 +108,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
                         final Like like = new Like(bookList.get(currentItem).getUser(), bookList.get(currentItem).getTitle(), mAuth.getCurrentUser().getUid());
                         databaseReference.child("Likes").child(like.getPublisher()).child(like.getCurrentUser() + like.getTitle()).child("title").setValue(like.getTitle());
-
-                        publisher=like.getPublisher();
 
                         databaseReference.addValueEventListener(new ValueEventListener() {
                             @Override

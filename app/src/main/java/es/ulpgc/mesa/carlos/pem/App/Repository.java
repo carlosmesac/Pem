@@ -218,7 +218,7 @@ public class Repository implements Contract {
                             if (task.isSuccessful()) {
                                 Uri downloadUri = task.getResult();
                                 url = downloadUri.toString();//Se obtiene la direccion de la imagen que se acaba de subir
-                                BookItem bookItem = new BookItem(author, url, isbn, title, dataSnapshot.child("users").child(mAuth.getCurrentUser().getUid()).child("username").getValue().toString(),
+                                BookItem bookItem = new BookItem(author, url, isbn, title, mAuth.getCurrentUser().getUid(),
                                         dataSnapshot.child("users").child(mAuth.getCurrentUser().getUid()).child("email").getValue().toString());
                                 booksRef.child(mAuth.getCurrentUser().getUid()).child(bookItem.getTitle() + "_" + bookItem.getIsbn()).setValue(bookItem);
                                 allBooksRef.child(mAuth.getCurrentUser().getUid() + "_" + bookItem.getTitle() + "_" + bookItem.getIsbn()).setValue(bookItem);

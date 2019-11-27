@@ -49,15 +49,15 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> im
     Dialog myDialog;
     public static final String EXTRA_MESSAGE = "com.example.myfirstapp.MESSAGE";
     private ArrayList<BookItem> bookListFull;
-    private String publisher = "";
-    private String currentUser = "";
-    private int currentItem = 0;
+    private String publisher="";
+    private String currentUser="";
+    private int currentItem=0;
 
 
     public HomeAdapter(Context context, ArrayList<BookItem> bookList) {
         this.context = context;
         this.bookList = bookList;
-        bookListFull = new ArrayList<>(bookList);//Create a new list that contains the full content of the array
+        bookListFull= new ArrayList<>(bookList);//Create a new list that contains the full content of the array
     }
 
     @NonNull
@@ -80,10 +80,10 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> im
             @Override
             public void onClick(View v) {
 
-                currentItem = holder.getLayoutPosition();
+                currentItem=holder.getLayoutPosition();
                 final Button contact;
                 Button user;
-                Button like;
+                final Button like;
                 TextView dialog_author;
                 TextView dialog_title;
                 ImageView dialog_image;
@@ -97,12 +97,12 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> im
                 dialog_title.setText(bookList.get(currentItem).getTitle());
                 loadImageFromURL(dialog_image, bookList.get(currentItem).getImage());
                 final BookItem bookItem = bookList.get(holder.getAdapterPosition());
-
-                //Obtener nombre de usuario actual
+                final Like bookLike= new Like(bookList.get(currentItem).getUser(),bookList.get(currentItem).getTitle(),mAuth.getCurrentUser().getUid());
                 databaseReference.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        currentUser=dataSnapshot.child("users").child(mAuth.getCurrentUser().getUid()).child("username").getValue().toString();
+                   currentUser= dataSnapshot.child("users").child(mAuth.getCurrentUser().getUid()).child("username").getValue().toString();
+                   publisher = dataSnapshot.child("users").child(bookLike.getPublisher()).child("username").getValue().toString();
                     }
 
                     @Override
@@ -110,7 +110,6 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> im
 
                     }
                 });
-
 
                 user.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -127,17 +126,15 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> im
                     @Override
                     public void onClick(View v) {
 
-
-                        final Like like = new Like(bookList.get(currentItem).getUser(), bookList.get(currentItem).getTitle(), mAuth.getCurrentUser().getUid());
-                        publisher = like.getPublisher();
-                        Log.e("Cosa", publisher + " " + currentUser);
-                        databaseReference.child("Likes").child(like.getPublisher()).child(like.getCurrentUser() + like.getTitle()).child("title").setValue(like.getTitle());
+                        databaseReference.child("Likes").child(bookLike.getPublisher()).child(bookLike.getCurrentUser()+bookLike.getTitle()).child("title").setValue(bookLike.getTitle());
                         databaseReference.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                databaseReference.child("Likes").child(like.getPublisher()).child(like.getCurrentUser() + like.getTitle()).child("publisher").setValue(publisher);
+                                databaseReference.child("Likes").child(bookLike.getPublisher()).child(bookLike.getCurrentUser()+bookLike.getTitle()).child("publisher").setValue(publisher);
 
-                                databaseReference.child("Likes").child(like.getPublisher()).child(like.getCurrentUser() + like.getTitle()).child("user").setValue(currentUser);
+                                databaseReference.child("Likes").child(bookLike.getPublisher()).child(bookLike.getCurrentUser()+bookLike.getTitle()).child("user").setValue(currentUser);
+
+
 
 
                             }
@@ -164,8 +161,9 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> im
                         emailIntent.setType("text/plain");
                         emailIntent.putExtra(Intent.EXTRA_EMAIL, TO);
                         emailIntent.putExtra(Intent.EXTRA_CC, CC);
-                        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Interesado en el libro: " + bookList.get(currentItem).getTitle());
-                        context.startActivity(Intent.createChooser(emailIntent, "Enviar email."));
+                        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Interesado en el libro: "+bookList.get(currentItem).getTitle());
+                        context.startActivity(Intent.createChooser(emailIntent,"Enviar email."));
+
 
 
                     }
@@ -175,6 +173,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> im
                 myDialog.show();
             }
         });
+
 
 
     }
@@ -187,64 +186,64 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> im
      */
     private void sendNotification(final String publisher, final String currentUser) {
 
-        int SDK_INT = android.os.Build.VERSION.SDK_INT;
-        if (SDK_INT > 8) {
-            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
-                    .permitAll().build();
-            StrictMode.setThreadPolicy(policy);
+                int SDK_INT = android.os.Build.VERSION.SDK_INT;
+                if (SDK_INT > 8) {
+                    StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+                            .permitAll().build();
+                    StrictMode.setThreadPolicy(policy);
 
-            try {
-                String jsonResponse;
+                    try {
+                        String jsonResponse;
 
-                URL url = new URL("https://onesignal.com/api/v1/notifications");
-                HttpURLConnection con = (HttpURLConnection) url.openConnection();
-                con.setUseCaches(false);
-                con.setDoOutput(true);
-                con.setDoInput(true);
+                        URL url = new URL("https://onesignal.com/api/v1/notifications");
+                        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+                        con.setUseCaches(false);
+                        con.setDoOutput(true);
+                        con.setDoInput(true);
 
-                con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-                con.setRequestProperty("Authorization", "Basic NTc3M2RmMTUtOTVlMy00NGMxLTg0MmUtNTA0ODA4NDZjNWFi");
-                con.setRequestMethod("POST");
+                        con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+                        con.setRequestProperty("Authorization", "Basic NTc3M2RmMTUtOTVlMy00NGMxLTg0MmUtNTA0ODA4NDZjNWFi");
+                        con.setRequestMethod("POST");
 
-                String strJsonBody = "{"
-                        + "\"app_id\": \"1d17caa3-26c9-4915-949f-081b2b15ab6f\","
+                        String strJsonBody = "{"
+                                + "\"app_id\": \"1d17caa3-26c9-4915-949f-081b2b15ab6f\","
 
-                        + "\"filters\": [{\"field\": \"tag\", \"key\": \"User_ID\", \"relation\": \"=\", \"value\": \"" + publisher + "\"}],"
+                                + "\"filters\": [{\"field\": \"tag\", \"key\": \"User_ID\", \"relation\": \"=\", \"value\": \"" + publisher + "\"}],"
 
-                        + "\"data\": {\"foo\": \"bar\"},"
-                        + "\"contents\": {\"en\": \"A " + currentUser + " le Interesa un libro tuyo\"}"
-                        + "}";
+                                + "\"data\": {\"foo\": \"bar\"},"
+                                + "\"contents\": {\"en\": \"A " + currentUser + " le Interesa un libro tuyo\"}"
+                                + "}";
 
 
-                System.out.println("strJsonBody:\n" + strJsonBody);
+                        System.out.println("strJsonBody:\n" + strJsonBody);
 
-                byte[] sendBytes = strJsonBody.getBytes("UTF-8");
-                con.setFixedLengthStreamingMode(sendBytes.length);
+                        byte[] sendBytes = strJsonBody.getBytes("UTF-8");
+                        con.setFixedLengthStreamingMode(sendBytes.length);
 
-                OutputStream outputStream = con.getOutputStream();
-                outputStream.write(sendBytes);
+                        OutputStream outputStream = con.getOutputStream();
+                        outputStream.write(sendBytes);
 
-                int httpResponse = con.getResponseCode();
-                System.out.println("httpResponse: " + httpResponse);
+                        int httpResponse = con.getResponseCode();
+                        System.out.println("httpResponse: " + httpResponse);
 
-                if (httpResponse >= HttpURLConnection.HTTP_OK
-                        && httpResponse < HttpURLConnection.HTTP_BAD_REQUEST) {
-                    Scanner scanner = new Scanner(con.getInputStream(), "UTF-8");
-                    jsonResponse = scanner.useDelimiter("\\A").hasNext() ? scanner.next() : "";
-                    scanner.close();
+                        if (httpResponse >= HttpURLConnection.HTTP_OK
+                                && httpResponse < HttpURLConnection.HTTP_BAD_REQUEST) {
+                            Scanner scanner = new Scanner(con.getInputStream(), "UTF-8");
+                            jsonResponse = scanner.useDelimiter("\\A").hasNext() ? scanner.next() : "";
+                            scanner.close();
 
-                } else {
-                    Scanner scanner = new Scanner(con.getErrorStream(), "UTF-8");
-                    jsonResponse = scanner.useDelimiter("\\A").hasNext() ? scanner.next() : "";
-                    scanner.close();
-                }
-                System.out.println("jsonResponse:\n" + jsonResponse);
+                        } else {
+                            Scanner scanner = new Scanner(con.getErrorStream(), "UTF-8");
+                            jsonResponse = scanner.useDelimiter("\\A").hasNext() ? scanner.next() : "";
+                            scanner.close();
+                        }
+                        System.out.println("jsonResponse:\n" + jsonResponse);
 
-            } catch (Throwable t) {
-                t.printStackTrace();
+                    } catch (Throwable t) {
+                        t.printStackTrace();
+                    }
+
             }
-
-        }
 
     }
 
@@ -255,6 +254,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> im
     }
 
 
+
     @Override
     public Filter getFilter() {
         return filter;
@@ -263,20 +263,20 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> im
     private Filter filter = new Filter() {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
-            ArrayList<BookItem> filterList = new ArrayList<>();
-            if (constraint == null || constraint.length() == 0) {
+            ArrayList<BookItem> filterList= new ArrayList<>();
+            if(constraint==null|| constraint.length()==0){
                 filterList.addAll(bookListFull);
-            } else {
+            }else {
                 String filterPattern = constraint.toString().toLowerCase().trim();
 
-                for (BookItem bookItem : bookListFull) {
-                    if (bookItem.getTitle().toLowerCase().contains(filterPattern)) {
+                for(BookItem bookItem: bookListFull){
+                    if(bookItem.getTitle().toLowerCase().contains(filterPattern)){
                         filterList.add(bookItem);
                     }
                 }
             }
             FilterResults results = new FilterResults();
-            results.values = filterList;
+            results.values= filterList;
 
             return results;
         }
@@ -284,7 +284,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> im
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
             bookList.clear();
-            bookList.addAll((ArrayList) results.values);
+            bookList.addAll((ArrayList)results.values);
 
             notifyDataSetChanged();
         }

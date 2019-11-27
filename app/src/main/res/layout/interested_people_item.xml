@@ -24,16 +24,18 @@
                 android:id="@+id/interestedPerson"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
                 android:layout_weight="1"
                 android:text="@string/bookName"
                 android:textAlignment="textStart"
-                android:textSize="18sp"
+                android:textSize="14sp"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/interestedDefinedText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
                 android:layout_weight="1"
                 android:text="@string/interested_on" />
 
@@ -44,7 +46,7 @@
                 android:layout_weight="1"
                 android:text="@string/bookName"
                 android:textAlignment="textStart"
-                android:textSize="18sp"
+                android:textSize="14sp"
                 android:textStyle="bold" />
 
             <ImageView
