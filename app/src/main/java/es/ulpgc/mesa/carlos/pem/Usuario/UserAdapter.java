@@ -87,19 +87,35 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
                 dialog_title.setText(bookList.get(currentItem).getTitle());
                 loadImageFromURL(dialog_image, bookList.get(currentItem).getImage());
                 final BookItem bookItem = bookList.get(holder.getAdapterPosition());
+
+
+                //Obtener nombre de usuario actual
+                databaseReference.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        currentUser=dataSnapshot.child("users").child(mAuth.getCurrentUser().getUid()).child("username").getValue().toString();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
                 like.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
                         final Like like = new Like(bookList.get(currentItem).getUser(), bookList.get(currentItem).getTitle(), mAuth.getCurrentUser().getUid());
                         databaseReference.child("Likes").child(like.getPublisher()).child(like.getCurrentUser() + like.getTitle()).child("title").setValue(like.getTitle());
+
+                        publisher=like.getPublisher();
+
                         databaseReference.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                publisher = dataSnapshot.child("users").child(like.getPublisher()).child("username").getValue().toString();
                                 databaseReference.child("Likes").child(like.getPublisher()).child(like.getCurrentUser() + like.getTitle()).child("publisher").setValue(publisher);
 
-                                currentUser = dataSnapshot.child("users").child(like.getCurrentUser()).child("username").getValue().toString();
                                 databaseReference.child("Likes").child(like.getPublisher()).child(like.getCurrentUser() + like.getTitle()).child("user").setValue(currentUser);
 
                             }
