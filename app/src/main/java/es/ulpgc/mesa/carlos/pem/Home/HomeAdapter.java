@@ -117,6 +117,8 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> im
                         Intent intent = new Intent(context, UserActivity.class);
                         String message = bookList.get(currentItem).getUser();
                         intent.putExtra(EXTRA_MESSAGE, message);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
                         context.startActivity(intent);
                         Log.d(TAG, String.valueOf(currentItem));
 

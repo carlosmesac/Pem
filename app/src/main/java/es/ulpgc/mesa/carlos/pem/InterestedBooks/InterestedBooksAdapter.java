@@ -96,6 +96,8 @@ public class InterestedBooksAdapter extends RecyclerView.Adapter<InterestedBooks
                         Intent intent = new Intent(context, UserActivity.class);
                         String message = bookList.get(currentItem).getUser();
                         intent.putExtra(EXTRA_MESSAGE, message);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
                         context.startActivity(intent);
 
                     }
