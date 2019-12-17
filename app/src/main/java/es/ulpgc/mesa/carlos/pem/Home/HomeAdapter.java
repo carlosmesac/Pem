@@ -1,6 +1,7 @@
 package es.ulpgc.mesa.carlos.pem.Home;
 
 import android.app.Dialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -156,15 +157,18 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> im
                 contact.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        String CC = "";
-                        String[] TO = {bookList.get(currentItem).getCorreo()};
-                        Intent emailIntent = new Intent(Intent.ACTION_SEND);
-                        emailIntent.setData(Uri.parse("mailto:"));
-                        emailIntent.setType("text/plain");
-                        emailIntent.putExtra(Intent.EXTRA_EMAIL, TO);
-                        emailIntent.putExtra(Intent.EXTRA_CC, CC);
-                        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Interesado en el libro: "+bookList.get(currentItem).getTitle());
-                        context.startActivity(Intent.createChooser(emailIntent,"Enviar email."));
+
+                        String mailto = "mailto:"+ bookList.get(currentItem).getCorreo() + "?subject=" + "Interesado en el libro: "+bookList.get(currentItem).getTitle();
+
+                        Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
+                        emailIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        emailIntent.setData(Uri.parse(mailto));
+
+                        try {
+                            context.startActivity(emailIntent);
+                        } catch (ActivityNotFoundException e) {
+                            //TODO: Handle case where no email app is available
+                        }
 
 
 
