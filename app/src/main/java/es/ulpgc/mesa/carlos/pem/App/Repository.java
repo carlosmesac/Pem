@@ -190,48 +190,52 @@ public class Repository implements Contract {
             public void onDataChange(final DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
-                if (dataSnapshot.child("booksUser").child(mAuth.getCurrentUser().getUid()).hasChild(isbn)) {
+                if(isbn.equals("")||author.equals("")||title.equals("")){
                     callback.onAddNewBook(true);
-                } else {
-                    final StorageReference ref = storageRef.child("images/" + mAuth.getCurrentUser().getUid() + "/" + title + ".jpg");
-                    imageView.setDrawingCacheEnabled(true);
-                    imageView.buildDrawingCache();
-                    Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
-                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                }else {
+                    if (dataSnapshot.child("booksUser").child(mAuth.getCurrentUser().getUid()).hasChild(isbn)) {
+                        callback.onAddNewBook(true);
+                    } else {
+                        final StorageReference ref = storageRef.child("images/" + mAuth.getCurrentUser().getUid() + "/" + title + ".jpg");
+                        imageView.setDrawingCacheEnabled(true);
+                        imageView.buildDrawingCache();
+                        Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
 
-                    byte[] data = baos.toByteArray();
-                    UploadTask uploadTask = ref.putBytes(data);
-                    Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-                        @Override
-                        public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                            if (!task.isSuccessful()) {
-                                throw task.getException();
+                        byte[] data = baos.toByteArray();
+                        UploadTask uploadTask = ref.putBytes(data);
+                        Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                            @Override
+                            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                                if (!task.isSuccessful()) {
+                                    throw task.getException();
+                                }
+
+                                // Continue with the task to get the download URL
+                                return ref.getDownloadUrl();
                             }
-
-                            // Continue with the task to get the download URL
-                            return ref.getDownloadUrl();
-                        }
-                    }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Uri> task) {
-                            if (task.isSuccessful()) {
-                                Uri downloadUri = task.getResult();
-                                url = downloadUri.toString();//Se obtiene la direccion de la imagen que se acaba de subir
-                                BookItem bookItem = new BookItem(author, url, isbn, title, mAuth.getCurrentUser().getUid(),
-                                        dataSnapshot.child("users").child(mAuth.getCurrentUser().getUid()).child("email").getValue().toString());
-                                booksRef.child(mAuth.getCurrentUser().getUid()).child(bookItem.getTitle() + "_" + bookItem.getIsbn()).setValue(bookItem);
-                                allBooksRef.child(mAuth.getCurrentUser().getUid() + "_" + bookItem.getTitle() + "_" + bookItem.getIsbn()).setValue(bookItem);
-                                callback.onAddNewBook(false);
-                                i++;
-                            } else {
-                                // Handle failures
-                                // ...
+                        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Uri> task) {
+                                if (task.isSuccessful()) {
+                                    Uri downloadUri = task.getResult();
+                                    url = downloadUri.toString();//Se obtiene la direccion de la imagen que se acaba de subir
+                                    BookItem bookItem = new BookItem(author, url, isbn, title, mAuth.getCurrentUser().getUid(),
+                                            dataSnapshot.child("users").child(mAuth.getCurrentUser().getUid()).child("email").getValue().toString());
+                                    booksRef.child(mAuth.getCurrentUser().getUid()).child(bookItem.getTitle() + "_" + bookItem.getIsbn()).setValue(bookItem);
+                                    allBooksRef.child(mAuth.getCurrentUser().getUid() + "_" + bookItem.getTitle() + "_" + bookItem.getIsbn()).setValue(bookItem);
+                                    callback.onAddNewBook(false);
+                                    i++;
+                                } else {
+                                    // Handle failures
+                                    // ...
+                                }
                             }
-                        }
-                    });
+                        });
 
 
+                    }
                 }
 
 

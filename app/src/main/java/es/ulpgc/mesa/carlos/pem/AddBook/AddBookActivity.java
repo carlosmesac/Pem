@@ -59,7 +59,7 @@ public class AddBookActivity
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                presenter.addBook(isbn.getText().toString(),author.getText().toString(),title.getText().toString(), addImage);
+                presenter.addBook(isbn.getText().toString().trim(),author.getText().toString().trim(),title.getText().toString().trim(), addImage);
             }
         });
 
