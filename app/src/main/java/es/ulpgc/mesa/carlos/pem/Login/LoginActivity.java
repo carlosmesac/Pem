@@ -92,4 +92,10 @@ public class LoginActivity<email, password>
     public void injectPresenter(LoginContract.Presenter presenter) {
         this.presenter = presenter;
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finishAffinity();
+    }
 }
