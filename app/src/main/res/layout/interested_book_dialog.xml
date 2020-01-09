@@ -82,7 +82,7 @@
             android:drawableLeft="@drawable/ic_email_black_24dp"
             android:drawablePadding="20dp"
             android:paddingLeft="20dp"
-            android:text="Conctact with the user"
+            android:text="Contact user"
             android:textAlignment="textStart"
 
             />
