@@ -158,25 +158,6 @@ public class HomeActivity
     }
 
 
-//    /**
-//     * Set the top navigation bar
-//     */
-//    private void setupToolbar() {
-//        androidx.appcompat.widget.Toolbar toolbar = (androidx.appcompat.widget.Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
-//
-//        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-//            @Override
-//            public boolean onMenuItemClick(MenuItem item) {
-//                if (item.getItemId() == R.id.mybutton) {
-//                    presenter.signOut();
-//
-//                    return false;
-//                }
-//                return false;
-//            }
-//        });
-//    }
 
     /**
      * BottomNavigationView setup

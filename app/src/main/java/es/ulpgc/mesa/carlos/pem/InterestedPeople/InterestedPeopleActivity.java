@@ -91,4 +91,9 @@ public class InterestedPeopleActivity
         menuItem.setChecked(true);
 
     }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finishAffinity();
+    }
 }

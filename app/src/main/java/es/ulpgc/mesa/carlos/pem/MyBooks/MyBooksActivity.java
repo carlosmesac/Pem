@@ -102,4 +102,9 @@ public class MyBooksActivity
         menuItem.setChecked(true);
 
     }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finishAffinity();
+    }
 }
